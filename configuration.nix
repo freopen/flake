@@ -47,7 +47,6 @@
   services.xserver.windowManager.i3.enable = true;
 
 
-
   # Configure keymap in X11
   services.xserver.layout = "us";
   # services.xserver.xkbOptions = {
@@ -78,12 +77,6 @@
   users.users.freopen = {
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      firefox
-      alacritty
-      vscode
-      hack-font
-    ];
   };
 
   # List packages installed in system profile. To search, run:
