@@ -47,6 +47,7 @@
     enable = true;
     windowManager.i3.enable = true;
     layout = "us,ru";
+    xkbVariant = "altgr-intl,";
     xkbOptions = "compose:rctrl,grp:caps_toggle";
   };
 
