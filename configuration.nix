@@ -43,16 +43,12 @@
   # };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.windowManager.i3.enable = true;
-
-
-  # Configure keymap in X11
-  services.xserver.layout = "us";
-  # services.xserver.xkbOptions = {
-  #   "eurosign:e";
-  #   "caps:escape" # map caps to escape.
-  # };
+  services.xserver = {
+    enable = true;
+    windowManager.i3.enable = true;
+    layout = "us,ru";
+    xkbOptions = "compose:rctrl,grp:caps_toggle";
+  };
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
