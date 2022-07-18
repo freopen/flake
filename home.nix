@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 {
   home = {
     username = "freopen";
@@ -9,15 +8,13 @@
       firefox
       alacritty
       hack-font
+      vscode
     ];
   };
   programs = {
     home-manager.enable = true;
-    neovim = {
-      enable = true;
-    };
   };
-  xsession.windowManager.i3 = {
+  wayland.windowManager.sway = {
     enable = true;
     config = {
       modifier = "Mod4";

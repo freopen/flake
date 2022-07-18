@@ -1,65 +1,55 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
-
 {
   imports =
     [
-      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
-
   nix = {
     package = pkgs.nixFlakes;
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
   };
-
-  # Use the systemd-boot EFI boot loader.
-  boot.loader = {
-    efi.canTouchEfiVariables = true;
-    grub = {
-      enable = true;
-      devices = [ "nodev" ];
-      efiSupport = true;
-      useOSProber = true;
+  boot = {
+    kernelPackages = pkgs.linuxKernel.packages.linux_zen;
+    kernelPatches = [{
+      name = "keyboard_patch";
+      patch = builtins.fetchurl {
+        url = "https://patchwork.kernel.org/series/658747/mbox/";
+        sha256 = "1p6zri73g2i942wnvmgq7vgng9qm71nwprblaqzglpvc1vgf2s8q";
+      };
+    }];
+    loader = {
+      efi.canTouchEfiVariables = true;
+      grub = {
+        enable = true;
+        devices = [ "nodev" ];
+        efiSupport = true;
+        useOSProber = true;
+      };
     };
   };
 
-  networking.hostName = "desktop";
+  networking.hostName = "laptop";
   networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Zurich";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkbOptions in tty.
-  # };
+  sound.enable = true;
 
-  # Enable the X11 windowing system.
-  services.xserver = {
-    enable = true;
-    windowManager.i3.enable = true;
-    layout = "us,ru";
-    xkbVariant = "altgr-intl,";
-    xkbOptions = "compose:rctrl,grp:caps_toggle";
+  services = {
+    xserver = {
+      enable = true;
+      layout = "us,ru";
+      xkbVariant = "altgr-intl,";
+      xkbOptions = "compose:rctrl,grp:caps_toggle";
+      libinput.enable = true;
+    };
+    printing.enable = true;
+    pipewire.enable = true;
   };
 
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  # sound.enable = true;
-  # hardware.pulseaudio.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  programs.sway.enable = true;
 
   nix.gc = {
     automatic = true;
@@ -70,48 +60,23 @@
 
   fonts.fonts = [ pkgs.hack-font ];
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.freopen = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" ];
   };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
     curl
     git
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
   system.autoUpgrade = {
     enable = true;
     dates = "daily";
-    flake = "github:freopen/flake";
+    flake = "github:freopen/nixos";
   };
 
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
   system.copySystemConfiguration = false;
 
   # This value determines the NixOS release from which the default
