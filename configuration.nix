@@ -35,18 +35,19 @@
 
   time.timeZone = "Europe/Zurich";
   i18n.defaultLocale = "en_US.UTF-8";
-  sound.enable = true;
 
   services = {
     xserver = {
-      enable = true;
       layout = "us,ru";
       xkbVariant = "altgr-intl,";
       xkbOptions = "compose:rctrl,grp:caps_toggle";
       libinput.enable = true;
     };
     printing.enable = true;
-    pipewire.enable = true;
+    pipewire = {
+      enable = true;
+      pulse.enable = true;
+    };
   };
 
   programs.sway.enable = true;
@@ -72,7 +73,8 @@
   ];
 
   system.autoUpgrade = {
-    enable = true;
+    # enable when keyboard patch is no longer needed.
+    enable = false;
     dates = "daily";
     flake = "github:freopen/nixos";
   };

@@ -5,7 +5,7 @@
     homeDirectory = "/home/freopen";
     stateVersion = "22.05";
     packages = with pkgs; [
-      firefox
+      firefox-wayland
       alacritty
       hack-font
       vscode
