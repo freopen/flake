@@ -66,11 +66,14 @@
     extraGroups = [ "wheel" ];
   };
 
-  environment.systemPackages = with pkgs; [
-    vim
-    curl
-    git
-  ];
+  environment = {
+    sessionVariables.NIXOS_OZONE_WL = "1";
+    systemPackages = with pkgs; [
+      vim
+      curl
+      git
+    ];
+  };
 
   system.autoUpgrade = {
     # enable when keyboard patch is no longer needed.
